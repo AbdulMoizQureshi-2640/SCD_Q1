@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd services/auth-service
-          npm ci
+          npm install
 
       - name: Run tests
         run: |

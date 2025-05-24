@@ -1,0 +1,89 @@
+version: "3.8"
+
+services:
+  auth-service:
+    build: ./services/auth-service
+    ports:
+      - "3001:3001"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/auth-service
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=3001
+    depends_on:
+      - mongodb
+    networks:
+      - microservices-network
+
+  blog-service:
+    build: ./services/blog-service
+    ports:
+      - "3002:3002"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/blog-service
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=3002
+    depends_on:
+      - mongodb
+    networks:
+      - microservices-network
+
+  comment-service:
+    build: ./services/comment-service
+    ports:
+      - "3003:3003"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/comment-service
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=3003
+    depends_on:
+      - mongodb
+    networks:
+      - microservices-network
+
+  profile-service:
+    build: ./services/profile-service
+    ports:
+      - "3004:3004"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/profile-service
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=3004
+    depends_on:
+      - mongodb
+    networks:
+      - microservices-network
+
+  api-gateway:
+    build: ./services/api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=3000
+      - AUTH_SERVICE_URL=http://auth-service:3001
+      - BLOG_SERVICE_URL=http://blog-service:3002
+      - COMMENT_SERVICE_URL=http://comment-service:3003
+      - PROFILE_SERVICE_URL=http://profile-service:3004
+    depends_on:
+      - auth-service
+      - blog-service
+      - comment-service
+      - profile-service
+    networks:
+      - microservices-network
+
+  mongodb:
+    image: mongo:4.4
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:

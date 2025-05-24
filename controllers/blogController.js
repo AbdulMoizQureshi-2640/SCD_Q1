@@ -1,5 +1,5 @@
-const Blog = require('../models/Blog');
-const View = require('../models/View');
+const Blog = require("../models/Blog");
+const View = require("../models/View");
 
 // Create Blog
 exports.createBlog = async (req, res) => {
@@ -11,12 +11,12 @@ exports.createBlog = async (req, res) => {
   const blogView = new View({ blogId: blog._id });
   await blogView.save();
 
-  res.status(201).json({ message: 'Blog created successfully' });
+  res.status(201).json({ message: "Blog created successfully" });
 };
 
 // Get Blogs
 exports.getBlogs = async (req, res) => {
-  const blogs = await Blog.find().populate('author', 'username');
+  const blogs = await Blog.find().populate("author", "username");
   res.json(blogs);
 };
 
@@ -33,5 +33,5 @@ exports.incrementViews = async (req, res) => {
     await newView.save();
   }
 
-  res.status(200).json({ message: 'View count incremented' });
+  res.status(200).json({ message: "View count incremented " });
 };
